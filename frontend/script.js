@@ -210,36 +210,79 @@ async function autoSync() {
     syncStatusEl.textContent = 'Syncing...';
     syncStatusEl.classList.add('syncing');
     
+    let submissions = [];
+    let fetchSuccess = false;
+
+    // Primary API
     try {
-        // Fetch recent AC submissions via public API
-        const response = await fetch(`https://leetcode-api-faisalshohag.vercel.app/${USERNAME}/ac-submissions`);
-        if (!response.ok) throw new Error('API unavailable');
-        
-        const data = await response.json();
-        const recentTitles = data.map(sub => sub.title);
-        
-        let newlySolved = 0;
-        
-        problemsData.forEach(problem => {
-            if (recentTitles.includes(problem.title) && !solvedProblems.includes(problem.id)) {
-                solvedProblems.push(problem.id);
-                newlySolved++;
+        const response = await fetch(`https://leetcode-api-faisalshohag.vercel.app/${USERNAME}`);
+        if (response.ok) {
+            const data = await response.json();
+            if (Array.isArray(data.recentSubmissions)) {
+                submissions = data.recentSubmissions;
+                fetchSuccess = true;
             }
-        });
-        
-        if (newlySolved > 0) {
-            localStorage.setItem('leetcodeSolved', JSON.stringify(solvedProblems));
-            renderProblems();
-            updateStats();
         }
-        
-        syncStatusEl.textContent = 'Synced';
-        syncStatusEl.classList.remove('syncing');
     } catch (err) {
-        console.error('Sync failed:', err);
+        console.warn('Primary API failed, trying fallback API...', err);
+    }
+
+    // Fallback API
+    if (!fetchSuccess) {
+        try {
+            const response = await fetch(`https://alfa-leetcode-api.onrender.com/${USERNAME}/acSubmission`);
+            if (response.ok) {
+                const data = await response.json();
+                if (Array.isArray(data.submission)) {
+                    submissions = data.submission;
+                    fetchSuccess = true;
+                }
+            }
+        } catch (err) {
+            console.error('Fallback API failed:', err);
+        }
+    }
+
+    if (!fetchSuccess) {
         syncStatusEl.textContent = 'Sync Failed';
         syncStatusEl.classList.remove('syncing');
+        return;
     }
+
+    // Extract accepted titles and slugs
+    const acceptedTitlesAndSlugs = new Set();
+    submissions.forEach(sub => {
+        const isAccepted = !sub.statusDisplay || sub.statusDisplay.toLowerCase() === 'accepted';
+        if (isAccepted) {
+            if (sub.title) acceptedTitlesAndSlugs.add(sub.title.toLowerCase().trim());
+            if (sub.titleSlug) acceptedTitlesAndSlugs.add(sub.titleSlug.toLowerCase().trim());
+        }
+    });
+
+    function getSlugFromUrl(url) {
+        return url.replace(/\/$/, '').split('/').pop();
+    }
+
+    let newlySolved = 0;
+    problemsData.forEach(problem => {
+        const slug = getSlugFromUrl(problem.url);
+        const isSolvedInApi = acceptedTitlesAndSlugs.has(problem.title.toLowerCase().trim()) || 
+                              acceptedTitlesAndSlugs.has(slug.toLowerCase().trim());
+        
+        if (isSolvedInApi && !solvedProblems.includes(problem.id)) {
+            solvedProblems.push(problem.id);
+            newlySolved++;
+        }
+    });
+
+    if (newlySolved > 0) {
+        localStorage.setItem('leetcodeSolved', JSON.stringify(solvedProblems));
+        renderProblems();
+        updateStats();
+    }
+
+    syncStatusEl.textContent = 'Synced';
+    syncStatusEl.classList.remove('syncing');
 }
 
 function toggleSolved(id) {
@@ -250,17 +293,7 @@ function toggleSolved(id) {
     }
     localStorage.setItem('leetcodeSolved', JSON.stringify(solvedProblems));
     updateStats();
-    
-    if (currentFilter !== 'all') {
-        renderProblems();
-    } else {
-        const card = document.querySelector(`[data-id="${id}"]`);
-        if (card) {
-            card.classList.toggle('solved');
-            const label = card.querySelector('.status-label');
-            label.textContent = solvedProblems.includes(id) ? 'Solved' : 'Mark as Solved';
-        }
-    }
+    renderProblems();
 }
 
 function updateStats() {
