@@ -1,7 +1,22 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema(
   {
+    // ---------- Authentication ----------
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      lowercase: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+
+    // ---------- LeetCode Data ----------
     username: {
       type: String,
       required: true,
@@ -135,5 +150,17 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// No manual index – unique: true already creates the index.
+// ---------- 🔥 FIXED: Password hashing (no 'next' error) ----------
+userSchema.pre('save', async function () {
+  // Only hash if password is modified or new
+  if (!this.isModified('password')) return;
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
+// ---------- Password comparison ----------
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
+};
+
 module.exports = mongoose.model('User', userSchema);
