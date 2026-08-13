@@ -1,6 +1,6 @@
 const express = require('express');
 const {syncUser} = require('../controllers/leetCodeController');
-const route = express.Router();
+const router = express.Router();
 
 router.post('/sync',syncUser);
 
