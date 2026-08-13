@@ -38,5 +38,6 @@ mongoose.connection.once('open', async () => {
 app.use('/api/auth', authRoutes);
 app.use('/api', syncRoutes);
 app.use('/api/leetcode', leetcodeRoutes);
+app.get('/test', (req, res) => res.send('Test route works!'));
 
 module.exports = app;
