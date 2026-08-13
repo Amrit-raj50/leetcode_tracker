@@ -1,111 +1,150 @@
-:root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+@import "tailwindcss";
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+@theme {
+  --font-sans: "Inter", "Geist", system-ui, sans-serif;
+  
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #e0e7ff;
+  --color-primary-200: #c7d2fe;
+  --color-primary-300: #a5b4fc;
+  --color-primary-400: #818cf8;
+  --color-primary-500: #6366f1;
+  --color-primary-600: #4f46e5;
+  --color-primary-700: #4338ca;
+  --color-primary-800: #3730a3;
+  --color-primary-900: #312e81;
+  --color-primary-950: #1e1b4b;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --animate-fade-in-up: fade-in-up 0.5s ease-out;
+  --animate-fade-in: fade-in 0.4s ease-out;
+  --animate-slide-in-right: slide-in-right 0.5s ease-out;
+  
+  --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+  --shadow-glow: 0 0 20px 0 rgba(99, 102, 241, 0.2);
+}
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
+@layer base {
+  html, body {
+    @apply min-h-screen w-full m-0 p-0 bg-slate-700 text-slate-900 font-sans antialiased selection:bg-primary-200 selection:text-primary-900;
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
   }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-body {
-  margin: 0;
-}
-
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
-
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
+
+@keyframes slide-in-right {
+  0% {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
-p {
-  margin: 0;
-}
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
+/* Custom Utilities for Inner-Card Notebook Paper */
+@layer utilities {
+  .bg-paper-card {
+    background-color: #fdfbf7; /* Warm cream/off-white */
+    background-image: 
+      /* Horizontal ruled lines - more visible gray-blue */
+      repeating-linear-gradient(
+        transparent,
+        transparent 47px,
+        #cbd5e1 47px, /* slate-300 */
+        #cbd5e1 48px
+      );
+    /* 48px repeating grid to align with 48px (h-12) inputs exactly */
+    background-position: 0 0; 
+  }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+  .paper-texture {
+    /* Subtle noise/grain texture */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  .paper-margin-line {
+    /* Vertical red/pink margin line */
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 48px; /* Align precisely with the layout padding */
+    width: 2px;
+    background-color: rgba(244, 63, 94, 0.4); /* Rose-500 with higher opacity */
+    box-shadow: 4px 0 0 rgba(244, 63, 94, 0.15); /* Subtle double-line effect */
+    z-index: 0;
+  }
+
+  .font-handwriting {
+    font-family: 'Patrick Hand', cursive;
+    letter-spacing: 0.02em;
+  }
+
+  .hand-drawn-border {
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    transition: border-radius 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .hand-drawn-border:focus, .hand-drawn-border:focus-within {
+    border-radius: 15px 255px 15px 225px / 255px 15px 225px 15px;
+  }
+
+  /* Authentic sketched box border */
+  .sketch-box {
+    border: 8px solid transparent;
+    border-image-source: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 2 12 Q 50 9 98 14' stroke='%2364748b' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Cpath d='M 4 88 Q 50 91 96 86' stroke='%2364748b' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Cpath d='M 12 2 Q 9 50 14 98' stroke='%2364748b' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Cpath d='M 88 4 Q 91 50 86 96' stroke='%2364748b' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    border-image-slice: 18;
+    border-image-width: 8px;
+    border-image-outset: 2px;
+    background-color: white;
+    background-clip: padding-box;
+    transition: all 0.2s ease;
+  }
+  
+  .sketch-box:focus, .sketch-box:focus-within {
+    border-image-source: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 2 12 Q 50 9 98 14' stroke='%23334155' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Cpath d='M 4 88 Q 50 91 96 86' stroke='%23334155' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Cpath d='M 12 2 Q 9 50 14 98' stroke='%23334155' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Cpath d='M 88 4 Q 91 50 86 96' stroke='%23334155' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    outline: none;
+  }
+
+  .sketch-box-error {
+    border-image-source: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 2 12 Q 50 9 98 14' stroke='%23ef4444' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Cpath d='M 4 88 Q 50 91 96 86' stroke='%23ef4444' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Cpath d='M 12 2 Q 9 50 14 98' stroke='%23ef4444' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Cpath d='M 88 4 Q 91 50 86 96' stroke='%23ef4444' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  }
+
+  /* Torn paper edge mask */
+  .torn-paper-edge {
+    mask-image: 
+      url("data:image/svg+xml,%3Csvg width='12' height='36' viewBox='0 0 12 36' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 0L4 5L10 11L3 17L8 23L2 29L12 36Z' fill='black'/%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg width='12' height='36' viewBox='0 0 12 36' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0L8 5L2 11L9 17L4 23L10 29L0 36Z' fill='black'/%3E%3C/svg%3E"),
+      linear-gradient(black, black);
+    mask-position: left top, right top, center;
+    mask-repeat: repeat-y, repeat-y, no-repeat;
+    mask-size: 12px 36px, 12px 36px, calc(100% - 24px) 100%;
+    
+    -webkit-mask-image: 
+      url("data:image/svg+xml,%3Csvg width='12' height='36' viewBox='0 0 12 36' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 0L4 5L10 11L3 17L8 23L2 29L12 36Z' fill='black'/%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg width='12' height='36' viewBox='0 0 12 36' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0L8 5L2 11L9 17L4 23L10 29L0 36Z' fill='black'/%3E%3C/svg%3E"),
+      linear-gradient(black, black);
+    -webkit-mask-position: left top, right top, center;
+    -webkit-mask-repeat: repeat-y, repeat-y, no-repeat;
+    -webkit-mask-size: 12px 36px, 12px 36px, calc(100% - 24px) 100%;
+  }
 }
