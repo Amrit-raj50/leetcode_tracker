@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { BookOpen, ArrowRight } from 'lucide-react';
+import { BookOpen, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import highlightImage from '../assets/highlight-blue.png';
 
@@ -9,6 +9,8 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [leetcodeUsername, setLeetcodeUsername] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const { register, loading } = useAuth();
   const navigate = useNavigate();
@@ -23,6 +25,8 @@ const Register = () => {
     
     if (password !== confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
     
+    if (!leetcodeUsername) newErrors.leetcodeUsername = 'LeetCode Username is required';
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -31,7 +35,7 @@ const Register = () => {
     e.preventDefault();
     if (!validate()) return;
 
-    const success = await register(email, password);
+    const success = await register(email, password, leetcodeUsername);
     if (success) {
       toast.success('Registration successful! Please sign in.', { icon: '🎉' });
       navigate('/login');
@@ -42,7 +46,7 @@ const Register = () => {
     <div className="min-h-screen flex items-center justify-center p-4">
       
       {/* The Notebook Card with Torn Edges */}
-      <div className="relative w-full max-w-lg bg-paper-card rounded-t-3xl rounded-b-3xl shadow-2xl animate-fade-in-up torn-paper-edge font-handwriting">
+      <div className="relative w-full max-w-lg bg-paper-card rounded-t-3xl rounded-b-3xl shadow-2xl animate-fade-in-up torn-paper-edge font-handwriting mt-8 mb-8">
         
         {/* Paper Texture Overlay inside the card */}
         <div className="absolute inset-0 paper-texture mix-blend-multiply opacity-60"></div>
@@ -66,14 +70,14 @@ const Register = () => {
                 alt="" 
                 className="absolute w-[130%] max-w-none h-[180%] -top-[45%] -left-[20%] mix-blend-multiply hue-rotate-[130deg] brightness-105 -z-10 object-fill opacity-90" 
               />
-              <h2 className="text-4xl font-bold text-slate-900 tracking-tight leading-none">Create Account</h2>
+              <h2 className="text-4xl font-bold text-slate-900 tracking-tight leading-none">LeetTracker</h2>
             </div>
           </div>
 
           <form onSubmit={handleSubmit} className="relative z-20">
             {/* Email Group: exactly 1 line (48px) */}
             <div className="h-[48px] flex flex-row items-center relative pl-4 sm:pl-8">
-              <label className="flex-shrink-0 text-2xl font-handwriting font-bold text-slate-800 relative z-10 mr-3 mt-1" htmlFor="email">
+              <label className="flex-shrink-0 text-2xl font-handwriting font-bold text-slate-800 relative z-10 mr-3 mt-1 w-24 sm:w-auto" htmlFor="email">
                 Email:
               </label>
               <div className="flex-grow flex items-center relative h-full">
@@ -93,43 +97,53 @@ const Register = () => {
               </div>
             </div>
 
-            {/* Password Group: exactly 1 line (48px) with 48px gap above */}
-            <div className="h-[48px] mt-[48px] flex flex-row items-center relative pl-4 sm:pl-8">
-              <label className="flex-shrink-0 text-2xl font-handwriting font-bold text-slate-800 relative z-10 mr-3 mt-1" htmlFor="password">
+            {/* Password Group */}
+            <div className="h-[48px] mt-[24px] flex flex-row items-center relative pl-4 sm:pl-8">
+              <label className="flex-shrink-0 text-2xl font-handwriting font-bold text-slate-800 relative z-10 mr-3 mt-1 w-24 sm:w-auto" htmlFor="password">
                 Password:
               </label>
               <div className="flex-grow flex items-center relative h-full">
-                <input
-                  id="password"
-                  type="password"
-                  className={`w-full h-[40px] px-3 text-2xl font-medium focus:outline-none focus:ring-0 transition-all shadow-sm ${
-                    errors.password 
-                      ? 'sketch-box sketch-box-error focus:shadow-md' 
-                      : 'sketch-box focus:shadow-md'
-                  }`}
-                  placeholder="At least 6 characters"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
+                <div className="relative w-full h-full flex items-center">
+                  <input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    className={`w-full h-[40px] px-3 pr-10 text-2xl font-medium focus:outline-none focus:ring-0 transition-all shadow-sm ${
+                      errors.password 
+                        ? 'sketch-box sketch-box-error focus:shadow-md' 
+                        : 'sketch-box focus:shadow-md'
+                    }`}
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 focus:outline-none"
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
                 {errors.password && <p className="absolute -top-6 right-0 text-red-500 text-sm font-bold bg-white/90 px-2 py-0.5 rounded shadow-sm animate-fade-in">{errors.password}</p>}
               </div>
             </div>
 
-            {/* Confirm Password Group: exactly 1 line (48px) with 48px gap above */}
-            <div className="h-[48px] mt-[48px] flex flex-row items-center relative pl-4 sm:pl-8">
-              <label className="flex-shrink-0 text-2xl font-handwriting font-bold text-slate-800 relative z-10 mr-3 mt-1" htmlFor="confirmPassword">
-                Confirm Password:
+            {/* Confirm Password Group */}
+            <div className="h-[48px] mt-[24px] flex flex-row items-center relative pl-4 sm:pl-8">
+              <label className="flex-shrink-0 text-2xl font-handwriting font-bold text-slate-800 relative z-10 mr-3 mt-1 w-24 sm:w-auto leading-none" htmlFor="confirmPassword">
+                <span className="hidden sm:inline">Confirm:</span>
+                <span className="sm:hidden">Confirm:</span>
               </label>
               <div className="flex-grow flex items-center relative h-full">
                 <input
                   id="confirmPassword"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   className={`w-full h-[40px] px-3 text-2xl font-medium focus:outline-none focus:ring-0 transition-all shadow-sm ${
                     errors.confirmPassword 
                       ? 'sketch-box sketch-box-error focus:shadow-md' 
                       : 'sketch-box focus:shadow-md'
                   }`}
-                  placeholder="Repeat password"
+                  placeholder="Confirm Password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
@@ -137,8 +151,31 @@ const Register = () => {
               </div>
             </div>
 
-            {/* Button Group: exactly 1 line (48px) with 48px gap above */}
-            <div className="h-[48px] mt-[48px] flex flex-col justify-end relative pl-4 sm:pl-8">
+            {/* LeetCode Username Group */}
+            <div className="h-[48px] mt-[24px] flex flex-row items-center relative pl-4 sm:pl-8">
+              <label className="flex-shrink-0 text-2xl font-handwriting font-bold text-slate-800 relative z-10 mr-3 mt-1 w-24 sm:w-auto leading-none" htmlFor="leetcodeUsername">
+                <span className="hidden sm:inline">Username:</span>
+                <span className="sm:hidden">User:</span>
+              </label>
+              <div className="flex-grow flex items-center relative h-full">
+                <input
+                  id="leetcodeUsername"
+                  type="text"
+                  className={`w-full h-[40px] px-3 text-2xl font-medium focus:outline-none focus:ring-0 transition-all shadow-sm ${
+                    errors.leetcodeUsername 
+                      ? 'sketch-box sketch-box-error focus:shadow-md' 
+                      : 'sketch-box focus:shadow-md'
+                  }`}
+                  placeholder="LeetCode Username"
+                  value={leetcodeUsername}
+                  onChange={(e) => setLeetcodeUsername(e.target.value)}
+                />
+                {errors.leetcodeUsername && <p className="absolute -top-6 right-0 text-red-500 text-sm font-bold bg-white/90 px-2 py-0.5 rounded shadow-sm animate-fade-in">{errors.leetcodeUsername}</p>}
+              </div>
+            </div>
+
+            {/* Button Group */}
+            <div className="h-[48px] mt-[32px] flex flex-col justify-end relative pl-4 sm:pl-8">
               <button
                 type="submit"
                 disabled={loading}
@@ -153,7 +190,7 @@ const Register = () => {
                   <span className="w-6 h-6 border-4 border-slate-900/30 border-t-slate-900 rounded-full animate-spin"></span>
                 ) : (
                   <>
-                    Create Account
+                    Sign Up
                     <ArrowRight size={24} className="ml-2 group-hover:translate-x-2 transition-transform" />
                   </>
                 )}
@@ -161,8 +198,8 @@ const Register = () => {
             </div>
           </form>
 
-          {/* Footer Link: exactly 1 line (48px) with 48px gap above */}
-          <div className="h-[48px] mt-[48px] flex items-center justify-center relative z-20">
+          {/* Footer Link */}
+          <div className="h-[48px] mt-[32px] flex items-center justify-center relative z-20">
             <span className="bg-white/90 px-4 py-1.5 rounded-full text-base font-medium text-slate-600 shadow-sm border border-slate-100">
               Already have an account?{' '}
               <Link 
