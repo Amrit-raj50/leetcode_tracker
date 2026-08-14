@@ -9,11 +9,12 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import History from './pages/History';
+import Setup from './pages/Setup';
 
 const AuthRoute = ({ children }) => {
   const { token } = useAuth();
   if (token) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/setup" replace />;
   }
   return children;
 };
@@ -40,6 +41,7 @@ const AppContent = () => {
         
         {/* Protected Routes wrapped in Layout */}
         <Route element={<ProtectedRoute />}>
+          <Route path="/setup" element={<Setup />} />
           <Route element={<Layout />}>
             <Route path="/" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />
