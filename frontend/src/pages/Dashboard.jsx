@@ -25,28 +25,58 @@ const Dashboard = () => {
   const [activityData, setActivityData] = useState([]);
 
   const fetchData = async () => {
+    if (!user) return;
     setLoading(true);
+    
     try {
-      // Mock Data to view the Dashboard without Backend connection
-      setTimeout(() => {
-        setStats({
-          totalSolved: 149,
-          streak: 5,
-          easySolved: 80, easyTotal: 100,
-          mediumSolved: 55, mediumTotal: 100,
-          hardSolved: 14, hardTotal: 100
-        });
+      // 1. Map Stats from Real User Data
+      const getStat = (difficulty) => {
+        const ac = user.submitStats?.acSubmissionNum?.find(s => s.difficulty === difficulty);
+        const total = user.platformStats?.find(s => s.difficulty === difficulty);
+        return {
+          solved: ac?.count || 0,
+          total: total?.count || 100 // fallback if platformStats is missing
+        };
+      };
 
-        const todayStr = new Date().toISOString().split('T')[0];
-        setActivityData([
-          new Date(Date.now() - 86400000 * 1).toISOString().split('T')[0],
-          new Date(Date.now() - 86400000 * 2).toISOString().split('T')[0],
-          new Date(Date.now() - 86400000 * 5).toISOString().split('T')[0],
-          todayStr
-        ]);
+      const easy = getStat('Easy');
+      const medium = getStat('Medium');
+      const hard = getStat('Hard');
 
+      setStats({
+        totalSolved: user.totalSolved || 0,
+        streak: user.userCalendar?.streak || 0,
+        easySolved: easy.solved, easyTotal: easy.total,
+        mediumSolved: medium.solved, mediumTotal: medium.total,
+        hardSolved: hard.solved, hardTotal: hard.total
+      });
+
+      // 2. Map Activity Heatmap Data
+      let parsedDates = [];
+      if (user.userCalendar?.submissionCalendar) {
+        try {
+          const calendarObj = typeof user.userCalendar.submissionCalendar === 'string'
+            ? JSON.parse(user.userCalendar.submissionCalendar)
+            : user.userCalendar.submissionCalendar;
+          
+          parsedDates = Object.keys(calendarObj).map(timestamp => {
+            return new Date(parseInt(timestamp) * 1000).toISOString().split('T')[0];
+          });
+        } catch (err) {
+          console.error("Failed to parse calendar", err);
+        }
+      }
+      setActivityData(parsedDates);
+
+      // 3. Fetch Today's Task (with Fallback)
+      try {
+        const res = await client.get('/api/daily/today');
+        setTask(res.data);
+      } catch (err) {
+        // API not ready – use mock data with "Coming Soon" flag
         setTask({
           status: 'pending',
+          isDemo: true, // Used to show a 'Coming Soon' badge
           question: {
             title: 'Two Sum',
             difficulty: 'Easy',
@@ -56,18 +86,17 @@ const Dashboard = () => {
             link: 'https://leetcode.com/problems/two-sum/'
           }
         });
-
-        setLoading(false);
-      }, 500); // 500ms artificial delay to show loader
+      }
     } catch (error) {
       toast.error('Error connecting to server');
+    } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [user]);
 
   const handleGenerate = async () => {
     setGenerating(true);
@@ -162,6 +191,7 @@ const Dashboard = () => {
               <QuestionCard
                 question={task?.question}
                 status={task?.status}
+                isDemo={task?.isDemo}
                 completing={completing}
                 onComplete={handleComplete}
                 onSync={handleGenerate}
