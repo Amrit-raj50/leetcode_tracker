@@ -85,8 +85,8 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Password Group: exactly 1 line (48px) with 48px gap above */}
-            <div className="h-[48px] mt-[48px] flex flex-row items-center relative pl-4 sm:pl-8">
+            {/* Password Group */}
+            <div className="h-[48px] mt-[24px] flex flex-row items-center relative pl-4 sm:pl-8">
               <label className="flex-shrink-0 text-2xl font-handwriting font-bold text-slate-800 relative z-10 mr-3 mt-1" htmlFor="password">
                 Password:
               </label>
@@ -107,8 +107,8 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Button Group: exactly 1 line (48px) with 48px gap above */}
-            <div className="h-[48px] mt-[48px] flex flex-col justify-end relative pl-4 sm:pl-8">
+            {/* Button Group */}
+            <div className="h-[48px] mt-[32px] flex flex-col justify-end relative pl-4 sm:pl-8">
               <button
                 type="submit"
                 disabled={loading}
@@ -131,8 +131,8 @@ const Login = () => {
             </div>
           </form>
 
-          {/* Footer Link: exactly 1 line (48px) with 48px gap above */}
-          <div className="h-[48px] mt-[48px] flex items-center justify-center relative z-20">
+          {/* Footer Link */}
+          <div className="h-[48px] mt-[32px] flex items-center justify-center relative z-20">
             <span className="bg-white/90 px-4 py-1.5 rounded-full text-base font-medium text-slate-600 shadow-sm border border-slate-100">
               Don't have an account?{' '}
               <Link 

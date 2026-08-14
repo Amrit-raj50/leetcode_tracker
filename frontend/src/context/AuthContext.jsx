@@ -48,10 +48,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (email, password) => {
+  const register = async (email, password, leetcodeUsername) => {
     setLoading(true);
     try {
-      await client.post('/api/auth/register', { email, password });
+      await client.post('/api/auth/register', { email, password, leetcodeUsername });
       return true;
     } catch (error) {
       const msg = error.response?.data?.error || 'Unable to connect to server. Please try again.';
