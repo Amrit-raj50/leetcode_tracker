@@ -67,6 +67,21 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    const fetchFreshUser = async () => {
+      if (token) {
+        try {
+          const res = await client.get('/api/me');
+          if (res.data && res.data.user) {
+            setUser(res.data.user);
+          }
+        } catch (error) {
+          console.error('Failed to fetch fresh user data:', error);
+        }
+      }
+    };
+
+    fetchFreshUser();
+
     const handleUnauthorized = () => {
       setAuth(null, null);
     };
