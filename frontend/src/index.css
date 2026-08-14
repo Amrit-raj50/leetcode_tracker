@@ -147,4 +147,32 @@
     -webkit-mask-repeat: repeat-y, repeat-y, no-repeat;
     -webkit-mask-size: 12px 36px, 12px 36px, calc(100% - 24px) 100%;
   }
+
+  /* Sticky Navbar Realistic Crease Effect */
+  .crease-fold {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 100px;
+    
+    /* Transparent hand-drawn organic SVG accordion fold */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 150' preserveAspectRatio='none'%3E%3Cpolygon points='0,0 250,5 500,2 750,8 1000,3 1000,40 750,30 500,45 250,25 0,35' fill='rgba(0,0,0,0.05)' /%3E%3Cpolygon points='0,25 250,15 500,30 750,20 1000,28 1000,40 750,30 500,45 250,25 0,35' fill='rgba(0,0,0,0.1)'/%3E%3Cpolygon points='0,23 250,13 500,28 750,18 1000,26 1000,28 750,20 500,30 250,15 0,25' fill='rgba(255,255,255,0.4)'/%3E%3Cpolygon points='0,35 250,25 500,45 750,30 1000,40 1000,90 750,85 500,75 250,88 0,70' fill='rgba(0,0,0,0.05)' /%3E%3Cpolygon points='0,65 250,75 500,60 750,78 1000,82 1000,90 750,85 500,75 250,88 0,70' fill='rgba(0,0,0,0.15)'/%3E%3Cpolygon points='0,63 250,73 500,58 750,76 1000,80 1000,82 750,78 500,60 250,75 0,65' fill='rgba(255,255,255,0.3)'/%3E%3Cpolygon points='0,70 250,88 500,75 750,85 1000,90 1000,140 750,130 500,145 250,120 0,135' fill='rgba(0,0,0,0.02)' /%3E%3Cpolygon points='0,120 250,105 500,130 750,115 1000,128 1000,140 750,130 500,145 250,120 0,135' fill='rgba(0,0,0,0.1)'/%3E%3Cpolygon points='0,118 250,103 500,128 750,113 1000,126 1000,128 750,115 500,130 250,105 0,120' fill='rgba(255,255,255,0.2)'/%3E%3C/svg%3E");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    
+    mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+    pointer-events: none;
+    z-index: 90;
+    
+    /* Animation mapped to scroll */
+    opacity: calc(var(--scroll-opacity, 0) * 1.5);
+    transform-origin: top;
+    
+    /* The fold compresses from stretched out (1.5) down to tightly folded (0.5) as you scroll */
+    transform: scaleY(calc(1.5 - var(--scroll-opacity, 0)));
+    
+    box-shadow: 0 10px 15px -5px rgba(0,0,0,calc(var(--scroll-opacity, 0) * 0.1));
+  }
 }

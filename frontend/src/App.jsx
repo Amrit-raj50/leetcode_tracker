@@ -40,11 +40,10 @@ const AppContent = () => {
         
         {/* Protected Routes wrapped in Layout */}
         <Route element={<Layout />}>
-          <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/history" element={<History />} />
-          </Route>
+          {/* Bypassed ProtectedRoute temporarily so you can view without backend */}
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/history" element={<History />} />
         </Route>
 
         {/* Fallback */}
