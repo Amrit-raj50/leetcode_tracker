@@ -117,7 +117,7 @@ const Login = () => {
                 <img 
                   src={highlightImage} 
                   alt="" 
-                  className="absolute w-[110%] max-w-none h-[180%] -top-[40%] -left-[5%] mix-blend-multiply -z-10 transition-transform group-hover:scale-[1.03] group-hover:rotate-1 object-fill opacity-90 pointer-events-none" 
+                  className="absolute w-[110%] max-w-none h-[180%] -top-[40%] -left-[5%] mix-blend-multiply -z-10 transition-transform object-fill opacity-90 pointer-events-none" 
                 />
                 {loading ? (
                   <span className="w-6 h-6 border-4 border-slate-900/30 border-t-slate-900 rounded-full animate-spin"></span>
