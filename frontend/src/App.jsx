@@ -39,11 +39,12 @@ const AppContent = () => {
         <Route path="/register" element={<AuthRoute><Register /></AuthRoute>} />
         
         {/* Protected Routes wrapped in Layout */}
-        <Route element={<Layout />}>
-          {/* Bypassed ProtectedRoute temporarily so you can view without backend */}
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/history" element={<History />} />
+        <Route element={<ProtectedRoute />}>
+          <Route element={<Layout />}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/history" element={<History />} />
+          </Route>
         </Route>
 
         {/* Fallback */}

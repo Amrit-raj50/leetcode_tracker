@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import client from '../api/client';
 import toast from 'react-hot-toast';
-import { UserCircle2, Code, RefreshCw, CheckCircle2, Lock, LogOut } from 'lucide-react';
+import { UserCircle2, Code, RefreshCw, CheckCircle2, Lock, LogOut, Key } from 'lucide-react';
 
 import HighlighterHeadline from '../components/common/HighlighterHeadline';
 
@@ -140,17 +140,37 @@ const Profile = () => {
                   </p>
                 </div>
               </div>
-              <button
-                onClick={copyToken}
-                className="text-xl font-bold font-handwriting text-primary-600 hover:text-primary-800 hover:underline flex items-center transition-colors relative z-10 mt-4"
-              >
-                  [📋 Copy]
-                </button>
               </>
             )}
             </div>
           </div>
 
+        </div>
+
+        {/* Extension Access Pass */}
+        <div className="sketch-box bg-purple-50/50 rounded-3xl relative p-8 md:p-10 mt-8">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 bg-purple-200/50 rounded-xl text-purple-800 flex items-center justify-center sketch-box shrink-0">
+              <Key size={24} />
+            </div>
+            <h3 className="text-2xl font-bold font-handwriting text-slate-800 tracking-tight">Extension Access Pass</h3>
+          </div>
+          
+          <p className="text-slate-600 font-handwriting font-bold text-lg mb-6 leading-relaxed">
+            Use this secret pass to authenticate your browser extension with your account. Do not share this pass with anyone.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row items-center gap-4 bg-white/60 p-4 sketch-box rounded-xl">
+            <div className="flex-1 w-full font-mono text-sm overflow-hidden text-ellipsis whitespace-nowrap text-slate-500 font-bold bg-white p-3 sketch-box rounded-lg">
+              {token ? `••••••••••••••••••••••••••••••••••••••••••••••••••••••••` : 'No token available'}
+            </div>
+            <button
+              onClick={copyToken}
+              className="w-full sm:w-auto flex items-center justify-center text-lg font-bold font-handwriting text-purple-700 hover:text-purple-900 transition-colors shrink-0 px-6 py-3 sketch-box bg-purple-200/50 hover:bg-purple-300/50"
+            >
+              [📋 Copy Pass]
+            </button>
+          </div>
         </div>
 
         {/* Action Buttons Container - Placed below the grid so they span correctly */}

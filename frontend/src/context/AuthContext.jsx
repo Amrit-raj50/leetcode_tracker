@@ -7,9 +7,9 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUserState] = useState(() => {
     const saved = localStorage.getItem('user');
-    return saved ? JSON.parse(saved) : { email: 'test@example.com', leetcodeUsername: 'amritrajjh17', totalSolved: 149 };
+    return saved ? JSON.parse(saved) : null;
   });
-  const [token, setTokenState] = useState(() => localStorage.getItem('token') || 'dummy-token');
+  const [token, setTokenState] = useState(() => localStorage.getItem('token') || null);
   const [loading, setLoading] = useState(false);
 
   const setAuth = (token, user) => {
