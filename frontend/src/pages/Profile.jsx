@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import client from '../api/client';
 import toast from 'react-hot-toast';
-import { ArrowLeft, RefreshCw, Lock, LogOut } from 'lucide-react';
-import Highlighter from '../components/Highlighter';
+import { UserCircle2, Code, RefreshCw, CheckCircle2, Lock, LogOut } from 'lucide-react';
+
+import HighlighterHeadline from '../components/common/HighlighterHeadline';
 
 const Profile = () => {
   const { user, setUser, token, logout } = useAuth();
@@ -17,7 +18,7 @@ const Profile = () => {
       setLeetcodeUsername(user.leetcodeUsername);
     }
   }, [user]);
-sumit
+
   const handleSync = async (e) => {
     if (e) e.preventDefault();
     if (!leetcodeUsername.trim()) {
@@ -55,152 +56,124 @@ sumit
   };
 
   return (
-    <div className="w-full flex flex-col items-center justify-center py-4">
-      
-      {/* Back Link - Outside the card */}
-      <div className="w-full max-w-2xl mb-6 pl-4 sm:pl-12 animate-fade-in-up">
-        <Link to="/" className="inline-flex items-center text-slate-600 hover:text-slate-900 font-handwriting text-2xl transition-colors font-bold relative group">
-          <ArrowLeft size={24} className="mr-2 z-10" />
-          <span className="z-10">Back to Dashboard</span>
-          <Highlighter type="underline" color="yellow" className="w-[110%] h-[100%] -bottom-[20%] -left-[5%] opacity-50 group-hover:opacity-80 transition-opacity" />
-        </Link>
+    <div className="max-w-6xl mx-auto w-full space-y-8 animate-fade-in-up pb-[48px]">
+      <div className="pt-[24px]">
+        <HighlighterHeadline icon="👤" title="Profile Settings" color="green" />
+        <p className="text-slate-600 text-xl font-handwriting font-bold mt-4 ml-4">Manage your account and integration preferences.</p>
       </div>
 
-      <div className="relative w-full max-w-2xl bg-paper-card rounded-t-3xl rounded-b-3xl shadow-2xl animate-fade-in-up torn-paper-edge font-handwriting">
-        
-        {/* Paper Texture Overlay */}
-        <div className="absolute inset-0 paper-texture mix-blend-multiply opacity-60"></div>
-        
-        {/* Margin Line */}
-        <div className="paper-margin-line"></div>
-
-        {/* Inner Content - Baseline grid spacing (multiples of 48px) */}
-        <div className="relative z-10 pt-[48px] pb-[48px] px-8 sm:px-12">
-          
-          {/* Header Block: exactly 2 lines (96px) */}
-          <div className="h-[96px] relative flex flex-col justify-end pb-[8px]">
-            <div className="relative inline-block mt-auto mb-[8px] pl-4 sm:pl-8">
-              <Highlighter type="scribble" color="blue" className="w-[110%] h-[180%] -top-[40%] -left-[5%] opacity-50" />
-              <h2 className="text-4xl font-bold text-slate-900 tracking-tight leading-none relative z-10">👤 Profile Settings</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        <div className="sketch-box bg-transparent rounded-3xl relative p-8 md:p-10 flex flex-col sm:flex-row items-center sm:items-start gap-6">
+          <div className="w-24 h-24 bg-green-200/50 rounded-full flex items-center justify-center text-green-800 sketch-box shrink-0">
+            <UserCircle2 size={56} strokeWidth={2} />
+          </div>
+          <div className="text-center sm:text-left pt-2">
+            <h2 className="text-3xl font-bold font-handwriting text-slate-800 tracking-tight">{user?.email}</h2>
+            <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 sketch-box bg-emerald-100/50 text-emerald-800 font-handwriting font-bold text-lg">
+              <CheckCircle2 size={20} />
+              Active Member
             </div>
           </div>
+        </div>
 
-          {/* Email: exactly 1 line (48px) */}
-          <div className="h-[48px] flex flex-row items-end pb-[8px] pl-4 sm:pl-8">
-            <span className="text-2xl font-bold text-slate-800 mr-3">Email:</span>
-            <span className="text-2xl text-slate-700 font-sans tracking-wide relative">
-               <Highlighter type="circle" color="orange" className="w-[120%] h-[160%] -top-[30%] -left-[10%] opacity-40" />
-               <span className="relative z-10">{user?.email || 'test@example.com'}</span>
-            </span>
-          </div>
-
-          {/* LeetCode Username: exactly 1 line (48px) with 48px gap above */}
-          <div className="h-[48px] mt-[48px] flex flex-row items-end pb-[8px] pl-4 sm:pl-8">
-            <span className="text-2xl font-bold text-slate-800 mr-3">LeetCode Username:</span>
-            {isEditing || !user?.leetcodeUsername ? (
-               <input 
-                 type="text" 
-                 className="sketch-box h-[40px] px-3 text-2xl font-medium focus:outline-none focus:ring-0 w-48 mb-[-4px] bg-white/80 relative z-10"
-                 value={leetcodeUsername}
-                 onChange={e => setLeetcodeUsername(e.target.value)}
-                 placeholder="username"
-                 autoFocus
-               />
-            ) : (
-               <>
-                 <span className="text-2xl text-slate-700 mr-4 font-sans font-medium tracking-wide">{user.leetcodeUsername}</span>
-                 <button onClick={() => setIsEditing(true)} className="text-xl font-bold text-primary-600 hover:text-primary-800 hover:underline mb-0.5 transition-colors relative z-10">
-                   [Edit]
-                 </button>
-               </>
-            )}
-          </div>
-
-          {/* Sync Button: exactly 1 line (48px) with 48px gap above */}
-          <div className="h-[48px] mt-[48px] flex flex-col justify-end pl-4 sm:pl-8 relative pb-[4px]">
-             <div className="absolute -left-12 -top-6 w-20 h-20 rotate-[15deg]">
-                 <Highlighter type="arrow" color="pink" className="w-full h-full opacity-60" />
-             </div>
-             <button 
-               onClick={handleSync}
-               disabled={syncing}
-               className="group relative z-10 w-56 h-[40px] flex items-center justify-center text-2xl font-bold text-slate-900 hover:text-slate-800 transition-all focus:outline-none disabled:opacity-70 sketch-box bg-white/90"
-             >
-               {syncing ? (
-                 <RefreshCw size={20} className="animate-spin mr-2" />
-               ) : (
-                 <RefreshCw size={20} className="mr-2 group-hover:rotate-180 transition-transform duration-500" />
-               )}
-               Sync Now
-             </button>
-          </div>
-
-          {/* Stats: Last Synced (1 line) */}
-          <div className="h-[48px] mt-[48px] flex flex-row items-end pb-[8px] pl-4 sm:pl-8">
-            <span className="text-2xl font-bold text-slate-800 mr-3">Last Synced:</span>
-            <span className="text-2xl text-slate-700 font-sans tracking-wide">{user?.lastSynced ? 'Just now' : 'Just now'}</span>
-          </div>
-          
-          {/* Stats: Total Solved (1 line) */}
-          <div className="h-[48px] flex flex-row items-end pb-[8px] pl-4 sm:pl-8">
-            <span className="text-2xl font-bold text-slate-800 mr-3">Total Solved:</span>
-            <span className="text-2xl text-slate-700 font-sans tracking-wide relative">
-               <span className="relative z-10">{user?.totalSolved || 0} questions</span>
-               <Highlighter type="check" color="green" className="w-8 h-8 absolute -right-10 -top-2" />
-            </span>
-          </div>
-
-          {/* Divider: exactly 1 line (48px) with 48px gap above */}
-          <div className="h-[48px] mt-[48px] flex items-end pb-[24px] pl-4 sm:pl-8 pr-4 sm:pr-8">
-            <div className="w-full border-t-[3px] border-dashed border-slate-300 opacity-60"></div>
-          </div>
-
-          {/* API Token: exactly 2 lines (96px) */}
-          <div className="h-[96px] flex flex-col justify-end pb-[8px] pl-4 sm:pl-8">
-            <span className="text-2xl font-bold text-slate-800 mb-1 flex items-center">
-              🔑 API Token (for extension)
-            </span>
-            <div className="flex items-center mb-1 h-[32px]">
-              <div className="relative">
-                <Highlighter type="box" color="green" className="w-[105%] h-[140%] -top-[20%] -left-[2.5%] opacity-50" />
-                <code className="text-lg text-slate-600 bg-white/80 px-2 py-0.5 rounded border border-slate-200 shadow-sm truncate w-64 mr-3 font-sans font-medium relative z-10">
-                  {token ? `${token.substring(0, 24)}...` : 'No token'}
-                </code>
+        <div className="sketch-box bg-transparent rounded-3xl relative p-8 md:p-10">
+          <div className="max-w-xl mx-auto">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-pink-200/50 rounded-xl text-pink-800 flex items-center justify-center sketch-box shrink-0">
+                <Code size={24} />
               </div>
-              <button 
-                onClick={copyToken}
-                className="text-xl font-bold text-primary-600 hover:text-primary-800 hover:underline flex items-center transition-colors relative z-10"
-              >
-                [📋 Copy]
-              </button>
+              <h3 className="text-2xl font-bold font-handwriting text-slate-800 tracking-tight">LeetCode Integration</h3>
             </div>
-          </div>
+            
+            <p className="text-slate-600 font-handwriting font-bold text-lg mb-8 leading-relaxed">
+              Link your LeetCode account to automatically sync your solved questions. This allows the system to generate targeted daily revision tasks based on your actual history.
+            </p>
 
-          {/* Change Password: exactly 1 line (48px) with 48px gap above */}
-          <div className="h-[48px] mt-[48px] flex flex-col justify-end pl-4 sm:pl-8 pb-[4px]">
-            <button 
-              onClick={() => toast.error('Change password not implemented yet')}
-              className="w-64 h-[40px] flex items-center justify-center text-2xl font-bold text-slate-700 hover:text-slate-900 transition-all sketch-box bg-white/90 relative z-10"
-            >
-              <Lock size={20} className="mr-2" />
-              Change Password
-            </button>
-          </div>
+            <form onSubmit={handleSync} className="space-y-6">
+              <div className="space-y-2">
+                <label className="block text-xl font-bold font-handwriting text-slate-800" htmlFor="leetcodeUsername">
+                  LeetCode Username
+                </label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500">
+                    <span className="font-bold font-handwriting text-lg">leetcode.com/</span>
+                  </div>
+                  <input
+                    id="leetcodeUsername"
+                    type="text"
+                    className="w-full pl-[130px] pr-4 py-3 rounded-xl bg-transparent border-b-2 border-slate-300 focus:border-blue-500 outline-none font-handwriting text-xl font-bold transition-all text-slate-800"
+                    placeholder="username"
+                    value={leetcodeUsername}
+                    onChange={(e) => setLeetcodeUsername(e.target.value)}
+                  />
+                </div>
+              </div>
 
-          {/* Logout: exactly 1 line (48px) with 48px gap above */}
-          <div className="h-[48px] mt-[48px] flex flex-col justify-end pl-4 sm:pl-8 pb-[4px]">
-            <button 
-              onClick={logout}
-              className="w-48 h-[40px] flex items-center justify-center text-2xl font-bold text-red-600 hover:text-red-700 transition-all sketch-box sketch-box-error bg-white/90 relative z-10"
-            >
-              <LogOut size={20} className="mr-2" />
-              Logout
-            </button>
+              <div className="pt-4">
+                <button
+                  type="submit"
+                  disabled={syncing || !leetcodeUsername.trim()}
+                  className="w-full sm:w-auto bg-blue-200/50 text-blue-800 font-bold font-handwriting text-xl py-3 px-8 sketch-box hover:bg-blue-300/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {syncing ? (
+                    <>
+                      <RefreshCw size={24} className="animate-spin" />
+                      Syncing...
+                    </>
+                  ) : (
+                    <>
+                      <RefreshCw size={24} />
+                      Sync Account
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+            
+            {user?.leetcodeUsername && (
+              <><div className="mt-8 p-6 bg-emerald-100/50 sketch-box animate-fade-in">
+                <div className="flex items-start gap-4">
+                  <CheckCircle2 className="text-emerald-700 shrink-0 mt-1" size={24} />
+                  <p className="text-emerald-900 font-handwriting font-bold text-lg leading-relaxed">
+                    Successfully linked to LeetCode account <strong className="font-black text-xl">{user.leetcodeUsername}</strong>.
+                    You currently have <strong className="font-black text-xl">{user.totalSolved || 0}</strong> questions synced to your profile.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={copyToken}
+                className="text-xl font-bold font-handwriting text-primary-600 hover:text-primary-800 hover:underline flex items-center transition-colors relative z-10 mt-4"
+              >
+                  [📋 Copy]
+                </button>
+              </>
+            )}
+            </div>
           </div>
 
         </div>
+
+        {/* Action Buttons Container - Placed below the grid so they span correctly */}
+        <div className="pt-8 flex flex-col sm:flex-row gap-8 items-start pl-4 sm:pl-8">
+          {/* Change Password */}
+          <button 
+            onClick={() => toast.error('Change password not implemented yet')}
+            className="w-64 h-[48px] flex items-center justify-center text-2xl font-bold font-handwriting text-slate-700 hover:text-slate-900 transition-all sketch-box bg-white/90 relative z-10"
+          >
+            <Lock size={20} className="mr-2" />
+            Change Password
+          </button>
+
+          {/* Logout */}
+          <button 
+            onClick={logout}
+            className="w-48 h-[48px] flex items-center justify-center text-2xl font-bold font-handwriting text-red-600 hover:text-red-700 transition-all sketch-box sketch-box-error bg-white/90 relative z-10"
+          >
+            <LogOut size={20} className="mr-2" />
+            Logout
+          </button>
+        </div>
       </div>
-    </div>
   );
 };
 

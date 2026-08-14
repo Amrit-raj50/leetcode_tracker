@@ -3,6 +3,8 @@ import client from '../api/client';
 import toast from 'react-hot-toast';
 import { Calendar as CalendarIcon, CheckCircle2, ChevronRight } from 'lucide-react';
 
+import HighlighterHeadline from '../components/common/HighlighterHeadline';
+
 const History = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -48,40 +50,40 @@ const History = () => {
   if (loading) {
     return (
       <div className="space-y-6 animate-pulse max-w-4xl mx-auto w-full">
-        <div className="h-24 bg-slate-200/60 rounded-3xl"></div>
-        <div className="h-96 bg-slate-200/60 rounded-3xl"></div>
+        <div className="h-24 bg-slate-200/60 rounded-3xl sketch-box"></div>
+        <div className="h-96 bg-slate-200/60 rounded-3xl sketch-box"></div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto w-full space-y-8 animate-fade-in-up">
-      <div>
-        <h1 className="text-3xl font-black text-slate-900 tracking-tight mb-2">Revision History</h1>
-        <p className="text-slate-500 text-lg">Track your consistency over the last 30 days.</p>
+    <div className="max-w-5xl mx-auto w-full space-y-8 animate-fade-in-up pb-[48px]">
+      <div className="pt-[24px]">
+        <HighlighterHeadline icon="🗓️" title="Revision History" color="blue" />
+        <p className="text-slate-600 text-xl font-handwriting font-bold mt-4 ml-4">Track your consistency over the last 30 days.</p>
       </div>
 
-      <div className="bg-white rounded-3xl shadow-soft border border-slate-100 overflow-hidden relative">
-        <div className="p-8 md:p-10 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+      <div className="sketch-box bg-transparent rounded-3xl relative">
+        <div className="p-8 md:p-10 border-b-2 border-slate-300 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
-              <CalendarIcon size={24} />
+            <div className="w-14 h-14 bg-blue-200/50 rounded-2xl flex items-center justify-center text-blue-800 sketch-box">
+              <CalendarIcon size={28} />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-900 tracking-tight">Activity Heatmap</h2>
-              <p className="text-slate-500 text-sm mt-0.5">Your daily commitment visualised</p>
+              <h2 className="text-2xl font-bold text-slate-800 font-handwriting tracking-tight">Activity Heatmap</h2>
+              <p className="text-slate-600 font-handwriting font-bold text-lg mt-0.5">Your daily commitment visualised</p>
             </div>
           </div>
           
-          <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white rounded-xl shadow-sm border border-slate-200">
-            <span className="text-3xl font-black text-slate-900 tracking-tighter">{history.length}</span>
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider leading-tight">Days<br/>Active</span>
+          <div className="hidden sm:flex items-center gap-2 px-4 py-2 sketch-box bg-yellow-100/50 rounded-xl">
+            <span className="text-3xl font-black text-slate-800 font-handwriting">{history.length}</span>
+            <span className="text-sm font-bold text-slate-600 font-handwriting leading-tight">Days<br/>Active</span>
           </div>
         </div>
 
         <div className="p-8 md:p-12">
           <div className="flex justify-center mb-10">
-            <div className="grid grid-cols-7 gap-3 sm:gap-4 max-w-3xl w-full">
+            <div className="grid grid-cols-7 gap-3 sm:gap-4 max-w-xl w-full">
               {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
                 <div key={day} className="text-center text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
                   {day}
@@ -142,14 +144,14 @@ const History = () => {
             </div>
           </div>
           
-          <div className="flex items-center justify-center gap-8 pt-8 border-t border-slate-100">
+          <div className="flex items-center justify-center gap-8 pt-8 border-t-2 border-slate-300">
             <div className="flex items-center gap-3">
-              <div className="w-5 h-5 rounded-md bg-slate-100 border border-slate-200"></div>
-              <span className="text-sm font-semibold text-slate-600">Pending</span>
+              <div className="w-6 h-6 rounded-lg bg-transparent sketch-box"></div>
+              <span className="text-lg font-bold font-handwriting text-slate-600">Pending</span>
             </div>
             <div className="flex items-center gap-3">
-              <div className="w-5 h-5 rounded-md bg-primary-500 shadow-sm shadow-primary-500/30"></div>
-              <span className="text-sm font-semibold text-slate-600">Completed</span>
+              <div className="w-6 h-6 rounded-lg bg-blue-400/80 sketch-box"></div>
+              <span className="text-lg font-bold font-handwriting text-slate-600">Completed</span>
             </div>
           </div>
         </div>
